@@ -2,6 +2,7 @@
 /// <reference lib="dom.iterable" />
 
 import { ArcRotateCamera, Engine, HemisphericLight, MeshBuilder, Scene, Vector3 } from '@babylonjs/core';
+import { EcsEngine } from './ecsEngine';
 
 export function startGame() {
   // Create canvas and engine
@@ -24,7 +25,14 @@ export function startGame() {
     scene.render();
   });
 
-  window.addEventListener('resize', () => {
-    engine.resize();
+  const ecsEngine = EcsEngine.getInstance();
+  addSystems();
+  scene.onBeforeRenderObservable.add(() => {
+    ecsEngine.update(engine.getDeltaTime() / 1000);
   });
+}
+
+function addSystems() {
+  const ecsEngine = EcsEngine.getInstance();
+  // ecsEngine.addSystem(new MovementSystem());
 }
